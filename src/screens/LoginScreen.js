@@ -1,38 +1,37 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AuthContext } from '../context/AuthContext';
+import { useAuthStore } from '../store/useAuthStore';
 import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../lib/supabase'
 
 export default function LoginScreen() {
     const navigation = useNavigation();
-    const { setIsAuthenticated, setUser } = useContext(AuthContext);
+    const { setLoading } = useAuthStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
     async function login() {
         try {
-
             if (!email || !password) {
                 setErrorMessage('Ingresa tu correo y contraseña')
                 return
             }
 
-            const { data, error } = await supabase.auth.signInWithPassword({
+            setLoading(true);
+            const { error } = await supabase.auth.signInWithPassword({
                 email,
                 password
             })
 
             if (error) {
+                setLoading(false);
                 setErrorMessage(error.message)
                 return
             }
 
             setErrorMessage('')
-            setUser(data.user)
-            setIsAuthenticated(true)
 
         } catch (err) {
             setErrorMessage('Ocurrió un error inesperado')

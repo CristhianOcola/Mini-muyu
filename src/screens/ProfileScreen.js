@@ -1,20 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronRight, Shield, FileText, PhoneCall, UserCircle, Bell, Moon } from 'lucide-react-native';
-import { AuthContext } from '../context/AuthContext';
-import { supabase } from '../lib/supabase'
+import { useAuthStore } from '../store/useAuthStore';
 
 import HeaderScreen from './HeaderScreen';
 
 export default function ProfileScreen() {
-    const { setIsAuthenticated, user } = useContext(AuthContext);
+    const { logout, user } = useAuthStore();
     const navigation = useNavigation();
 
-    async function singOut() {
-        await supabase.auth.signOut()
-        setIsAuthenticated(false)
+    async function handleSignOut() {
+        await logout();
     }
 
     const MenuRow = ({ icon: Icon, title, isToggle, isLast, onPress }) => (
@@ -79,7 +77,7 @@ export default function ProfileScreen() {
                     {/*Cuenta */}
                     <TouchableOpacity
                         className="bg-red-50/50 p-4 rounded-3xl flex-row items-center border border-red-100 mb-6"
-                        onPress={() => singOut()}
+                        onPress={() => handleSignOut()}
                     >
                         <Text className="text-red-500 font-bold flex-1 text-center text-lg">Cerrar Sesión</Text>
                     </TouchableOpacity>

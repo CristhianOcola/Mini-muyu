@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Audio } from 'expo-audio';
+import { Audio } from 'expo-av';
 import { Play, Pause, RotateCcw, Check } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import HeaderScreen from './HeaderScreen';

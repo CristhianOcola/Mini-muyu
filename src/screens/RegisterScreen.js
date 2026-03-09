@@ -1,29 +1,29 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AuthContext } from '../context/AuthContext';
+import { useAuthStore } from '../store/useAuthStore';
 import { supabase } from '../lib/supabase'
 
 export default function RegisterScreen() {
-    const { setIsAuthenticated, setUser } = useContext(AuthContext);
+    const { setLoading } = useAuthStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
     async function register() {
-        const { data, error } = await supabase.auth.signUp({
+        setLoading(true);
+        const { error } = await supabase.auth.signUp({
             email: email,
             password: password
         })
 
         if (error) {
+            setLoading(false);
             setErrorMessage(error.message)
             return
         }
 
         setErrorMessage('')
-        setUser(data.user)
-        setIsAuthenticated(true)
     }
 
     return (
